@@ -1,0 +1,9 @@
+services:
+  default-sensitive:
+    extends:
+      file: base.yml
+      service: default-labels
+
+    labels:
+      - "traefik.http.middlewares.${TRFK_ROUTER}-auth.basicauth.users=${TRFK_AUTH}"
+      - "traefik.http.routers.${TRFK_ROUTER}.middlewares=secure-chain@file,${TRFK_ROUTER}-auth"

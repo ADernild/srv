@@ -1,0 +1,14 @@
+services:
+  default-labels:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${TRFK_ROUTER}.rule=Host(`${TRFK_HOSTNAME}`) || Host(`www.${TRFK_HOSTNAME}`)"
+      - "traefik.http.routers.${TRFK_ROUTER}.entrypoints=web,websecure"
+      - "traefik.http.routers.${TRFK_ROUTER}.tls=true"
+      - "traefik.http.routers.${TRFK_ROUTER}.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.${TRFK_ROUTER}.tls.options=default"
+      - "traefik.http.routers.${TRFK_ROUTER}.middlewares=secure-chain@file"
+      - "traefik.http.services.${TRFK_ROUTER}.loadbalancer.server.port=${TRFK_PORT}"
+    networks:
+      - proxy
+
