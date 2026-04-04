@@ -3,7 +3,7 @@ services:
     image: ghcr.io/wollomatic/socket-proxy:1.9.0
     read_only: true
     restart: unless-stopped
-    user: 65530:1000
+    user: 65530:989
     mem_limit: 128M
     cap_drop:
       - ALL
@@ -40,6 +40,9 @@ services:
       - authentik
 
   authentik-server:
+    extends:
+      file: ../../../common/base.yml
+      service: default-labels
     command: server
     depends_on:
       authentik-psql:
@@ -81,6 +84,8 @@ services:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.2-rc1}
     restart: unless-stopped
     shm_size: 512mb
+    group_add:
+      - "989"
     volumes:
       - authentik-socket:/socket/:ro
       - data:/data
@@ -98,7 +103,7 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: size=1k,uid=65530,gid=1000,mode=0770,noexec
+      o: size=1k,uid=65530,gid=989,mode=0770,noexec
   database:
     driver: local
   data:

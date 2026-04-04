@@ -3,7 +3,7 @@ services:
     image: ghcr.io/wollomatic/socket-proxy:1.9.0
     read_only: true
     restart: unless-stopped
-    user: 65530:999
+    user: 65530:989
     mem_limit: 128M
     cap_drop:
       - ALL
