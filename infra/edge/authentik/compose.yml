@@ -42,12 +42,12 @@ services:
   authentik-server:
     command: server
     depends_on:
-      postgresql:
+      authentik-psql:
         condition: service_healthy
     env_file:
       - .env
     environment:
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__HOST: authentik-psql
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
@@ -72,7 +72,7 @@ services:
     env_file:
       - .env
     environment:
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__HOST: authentik-psql
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
@@ -84,7 +84,6 @@ services:
     volumes:
       - authentik-socket:/socket/:ro
       - data:/data
-      - certs:/certs
       - ./custom-templates:/templates
     networks:
       - authentik
@@ -103,6 +102,4 @@ volumes:
   database:
     driver: local
   data:
-    driver: local
-  certs:
     driver: local
