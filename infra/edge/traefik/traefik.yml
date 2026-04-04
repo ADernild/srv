@@ -19,6 +19,7 @@ entryPoints:
 certificatesResolvers:
   letsencrypt:
     acme:
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
       email: alex@dernild.dk
       storage: /letsencrypt/acme.json
       dnsChallenge:
@@ -42,7 +43,7 @@ api:
   insecure: false
 
 log:
-  level: INFO
+  level: DEBUG
   format: json
 
 accessLog:
