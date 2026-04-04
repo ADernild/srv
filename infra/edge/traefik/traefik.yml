@@ -55,4 +55,4 @@ metrics:
     entryPoint: "traefik"
 
 ping:
-  entrypoint: web
+  entrypoint: "traefik"
