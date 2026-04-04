@@ -1,0 +1,108 @@
+services:
+  authentik-socket:
+    image: ghcr.io/wollomatic/socket-proxy:1.9.0
+    read_only: true
+    restart: unless-stopped
+    user: 65530:1000
+    mem_limit: 128M
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges
+    command:
+      - -loglevel=info
+      - -shutdowngracetime=5
+      - -allowGET=/v1\..{1,2}/(version|info|containers/.*)
+      - -allowPOST=/v1\..{1,2}/(containers/create|containers/.*/kill|images/create)
+      - -allowDELETE=/v1\..{1,2}/containers/.*
+      - -watchdoginterval=60
+      - -stoponwatchdog
+      - -proxysocketendpoint=/socket/authentik.sock
+      - -proxysocketendpointfilemode=0660
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - authentik-socket:/socket/
+    network_mode: none
+
+  authentik-psql:
+    extends:
+      file: ../../../common/psql.yml
+      service: postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${PG_DB:-authentik}
+      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_USER: ${PG_USER:-authentik}
+    volumes:
+      - database:/var/lib/postgresql/data
+    networks:
+      - authentik
+
+  authentik-server:
+    command: server
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.2-rc1}
+    restart: unless-stopped
+    shm_size: 512mb
+    volumes:
+      - data:/data
+      - ./custom-templates:/templates
+    networks:
+      - authentik
+      - internal
+
+  authentik-worker:
+    command: worker
+    depends_on:
+      authentik-psql:
+        condition: service_healthy
+      authentik-socket:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
+      DOCKER_HOST: unix:///socket/authentik.sock
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.2-rc1}
+    restart: unless-stopped
+    shm_size: 512mb
+    volumes:
+      - authentik-socket:/socket/:ro
+      - data:/data
+      - certs:/certs
+      - ./custom-templates:/templates
+    networks:
+      - authentik
+
+networks:
+  authentik:
+    internal: true
+
+volumes:
+  authentik-socket:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1k,uid=65530,gid=1000,mode=0770,noexec
+  database:
+    driver: local
+  data:
+    driver: local
+  certs:
+    driver: local

@@ -1,0 +1,60 @@
+services:
+  socketproxy:
+    image: ghcr.io/wollomatic/socket-proxy:1.9.0
+    read_only: true
+    restart: unless-stopped
+    user: 65530:999
+    mem_limit: 128M
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges
+    command:
+      - -loglevel=debug
+      - -shutdowngracetime=5
+      - -allowGET=/v1\..{1,2}/(version|containers/.*|events.*)
+      - -allowHEAD=/_ping
+      - -watchdoginterval=60
+      - -stoponwatchdog
+      - -proxysocketendpoint=/socket/traefik.sock
+      - -proxysocketendpointfilemode=0600
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - trfk-socket:/socket/
+    network_mode: none
+
+  traefik:
+    image: traefik:v3.6.9
+    restart: unless-stopped
+    extends:
+      file: ../../../common/base.yml
+      service: default-labels
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/ping"]
+      interval: 30s
+      timeout: 5s
+    ports:
+      - "80:80"
+      - "443:443/tcp"
+      - "443:443/udp"
+    volumes:
+      - trfk-socket:/socket/:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./rules:/etc/traefik/rules:ro
+      - letsencrypt:/letsencrypt
+    env_file: .env
+    networks:
+      - public
+      - internal
+    labels:
+      - "traefik.http.routers.${TRFK_ROUTER}.service=api@internal"
+
+volumes:
+  trfk-socket:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1k,uid=65530,gid=0,mode=0700,noexec
+  letsencrypt:
+    driver: local

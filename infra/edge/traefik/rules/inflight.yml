@@ -1,0 +1,8 @@
+http:
+  middlewares:
+    in-flight:
+      inFlightReq:
+        amount: 20
+        sourceCriterion:
+          ipStrategy:
+            depth: 1

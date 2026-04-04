@@ -1,0 +1,11 @@
+http:
+  middlewares:
+    secure-chain:
+      chain:
+        middlewares:
+          - redirect-to-non-www
+          - security-headers
+          - compress
+          - rate-limit
+          - in-flight
+          - retry

@@ -1,0 +1,13 @@
+name: infra-edge
+
+include:
+  - ./traefik/compose.yml
+  - ./cloudflared/compose.yml
+  - ./authentik/compose.yml
+
+networks:
+  public:
+    name: public
+  internal:
+    name: internal
+    internal: true
