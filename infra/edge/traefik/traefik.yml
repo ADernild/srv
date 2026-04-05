@@ -26,13 +26,13 @@ certificatesResolvers:
       caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
       email: alex@dernild.dk
       storage: /letsencrypt/acme.json
+      keyType: EC256
       dnsChallenge:
         provider: cloudflare
         resolvers:
           - "1.1.1.1:53"
           - "1.0.0.1:53"
-      delayBeforeCheck: 5
-      keyType: EC256
+        delayBeforeCheck: 5
 
 providers:
   docker:
