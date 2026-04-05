@@ -15,6 +15,10 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: dernild.com
+            sans:
+              - "*.dernild.com"
 
 certificatesResolvers:
   letsencrypt:
