@@ -18,6 +18,16 @@ entryPoints:
       tls:
         options: default
         certResolver: letsencrypt
+        domains:
+          - main: dernild.com
+            sans:
+              - "*.dernild.com"
+          - main: dernild.dk
+            sans:
+              - "*.dernild.dk"
+          - main: dernild.dev
+            sans:
+              - "*.dernild.dev"
 
 certificatesResolvers:
   letsencrypt:
