@@ -13,12 +13,11 @@ entryPoints:
     http3:
       advertisedPort: 443
     http:
+      middlewares:
+        - secure-chain@file
       tls:
+        options: default
         certResolver: letsencrypt
-        domains:
-          - main: dernild.com
-            sans:
-              - "*.dernild.com"
 
 certificatesResolvers:
   letsencrypt:
@@ -45,7 +44,8 @@ providers:
 
 api:
   dashboard: true
-  insecure: false
+  insecure: true
+  debug: true
 
 log:
   level: DEBUG
