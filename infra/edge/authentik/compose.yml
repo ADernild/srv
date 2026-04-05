@@ -42,7 +42,7 @@ services:
   authentik-server:
     extends:
       file: ../../../common/base.yml
-      service: default-labels
+      service: default
     command: server
     depends_on:
       authentik-psql:
