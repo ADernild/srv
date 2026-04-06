@@ -1,0 +1,16 @@
+http:
+  routers:
+    redirect-to-dev:
+      rule: "Host(`dernild.dk`) || Host(`www.dernild.dk`) || Host(`dernild.com`) || Host(`www.dernild.com`)"
+      entrypoints:
+        - websecure
+      middlewares:
+        - redirect-to-dev
+      service: noop@internal
+
+  middlewares:
+    redirect-to-dev:
+      redirectRegex:
+        regex: "^https?://(?:www\\.)?dernild\\.(?:dk|com)(.*)"
+        replacement: "https://dernild.dev${1}"
+        permanent: true
