@@ -4,7 +4,7 @@ services:
     container_name: dernild-dev
     restart: unless-stopped
     extends:
-      file: ../../common/base
+      file: ../../common/base.yml
       service: default
     networks:
       - internal
