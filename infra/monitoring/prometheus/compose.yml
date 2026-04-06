@@ -1,0 +1,17 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    extends:
+      file: ../../../common/sensitive.yml
+      service: sensitive
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - data:/prometheus
+    networks:
+      - internal
+
+volumes:
+  data:

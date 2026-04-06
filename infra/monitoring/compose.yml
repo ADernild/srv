@@ -1,0 +1,9 @@
+name: infra-monitoring
+
+include:
+  - ./prometheus/compose.yml
+  - ./grafana/compose.yml
+
+networks:
+  internal:
+    external: true
