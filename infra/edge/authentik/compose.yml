@@ -58,6 +58,8 @@ services:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.2-rc1}
     restart: unless-stopped
     shm_size: 512mb
+    labels:
+      - "traefik.http.routers.authentik.rule=Host(`auth.dernild.com`) || Host(`auth.dernild.dk`) || Host(`auth.dernild.dev`)"
     volumes:
       - data:/data
       - ./custom-templates:/templates
