@@ -1,0 +1,14 @@
+services:
+  web:
+    image: adernild/dernild.dev
+    container_name: dernild-dev
+    restart: unless-stopped
+    extends:
+      file: ../../common/base
+      service: default
+    networks:
+      - internal
+
+networks:
+  internal:
+    external: true
