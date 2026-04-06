@@ -1,0 +1,14 @@
+services:
+  rorclient-docs:
+    image: adernild/rorclient-docs
+    container_name: rorclient-docs
+    restart: unless-stopped
+    extends:
+      file: ../../common/base.yml
+      service: default
+    networks:
+      - internal
+
+networks:
+  internal:
+    external: true
