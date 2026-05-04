@@ -6,11 +6,12 @@ services:
       - dr-record-linker
 
   app:
-    image: adernild/dr-record-linker:v0.1.3
+    image: adernild/dr-record-linker:${VERSION}
     extends:
       file: ../../common/sensitive.yml
       service: sensitive
     environment:
+      - DR_RECORD_LINKER_VERSION=${VERSION}
       - DR_RECORD_LINKER_SECRET_KEY=${SECRET_KEY}
       - DR_RECORD_LINKER_REDIS_URL=redis://redis:6379
       - DR_RECORD_LINKER_SESSION_TTL=86400
@@ -25,12 +26,11 @@ services:
       - dr-record-linker
 
   worker:
-    image: adernild/dr-record-linker:v0.1.3
+    image: adernild/dr-record-linker:${VERSION}
     command: celery -A core.celery worker --loglevel=info
     environment:
       - DR_RECORD_LINKER_SECRET_KEY=${SECRET_KEY}
       - DR_RECORD_LINKER_REDIS_URL=redis://redis:6379
-      - DR_RECORD_LINKER_SESSION_TTL=86400
     volumes:
       - uploads:/tmp/uploads
       - results:/tmp/results
