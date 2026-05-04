@@ -1,0 +1,60 @@
+services:
+  redis:
+    image: redis:8.6-alpine
+    restart: unless-stopped
+    networks:
+      - dr-record-linker
+
+  app:
+    image: adernild/dr-record-linker:v0.1.0
+    extends:
+      file: ../../../common/sensitive.yml
+      service: sensitive
+    environment:
+      - DR_RECORD_LINKER_SECRET_KEY=${SECRET_KEY}
+      - DR_RECORD_LINKER_REDIS_URL=redis://redis:6379
+      - DR_RECORD_LINKER_SESSION_TTL=86400
+    volumes:
+      - uploads:/tmp/uploads
+      - results:/tmp/results
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - internal
+      - dr-record-linker
+
+  worker:
+    image: adernild/dr-record-linker:v0.1.0
+    command: celery -A core.celery worker --loglevel=info
+    environment:
+      - DR_RECORD_LINKER_SECRET_KEY=${SECRET_KEY}
+      - DR_RECORD_LINKER_REDIS_URL=redis://redis:6379
+      - DR_RECORD_LINKER_SESSION_TTL=86400
+    volumes:
+      - uploads:/tmp/uploads
+      - results:/tmp/results
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - dr-record-linker
+
+volumes:
+  uploads:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "uid=1000,gid=1000,mode=1777"
+  results:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "uid=1000,gid=1000,mode=1777"
+
+networks:
+  internal:
+    external: true
+  dr-record-linker:
