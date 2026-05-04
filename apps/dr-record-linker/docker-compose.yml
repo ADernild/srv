@@ -6,7 +6,7 @@ services:
       - dr-record-linker
 
   app:
-    image: adernild/dr-record-linker:v0.1.1
+    image: adernild/dr-record-linker:v0.1.2
     extends:
       file: ../../common/sensitive.yml
       service: sensitive
@@ -25,7 +25,7 @@ services:
       - dr-record-linker
 
   worker:
-    image: adernild/dr-record-linker:v0.1.1
+    image: adernild/dr-record-linker:v0.1.2
     command: celery -A core.celery worker --loglevel=info
     environment:
       - DR_RECORD_LINKER_SECRET_KEY=${SECRET_KEY}
