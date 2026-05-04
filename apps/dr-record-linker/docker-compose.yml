@@ -8,7 +8,7 @@ services:
   app:
     image: adernild/dr-record-linker:v0.1.0
     extends:
-      file: ../../../common/sensitive.yml
+      file: ../../common/sensitive.yml
       service: sensitive
     environment:
       - DR_RECORD_LINKER_SECRET_KEY=${SECRET_KEY}
