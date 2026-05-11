@@ -1,0 +1,6 @@
+services:
+  neo4j:
+    extends:
+      file: ../../common/neo4j.yml
+      service: neo4j
+    env_file: .env
