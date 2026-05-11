@@ -4,9 +4,12 @@ services:
     extends:
       file: base.yml
       service: default
-    expose:
-      - 7474
-      - 7687
+    healthcheck:
+      test: wget http://localhost:7474 || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 5s
     labels:
       - "traefik.http.routers.${TRFK_ROUTER}.middlewares=cors-neo4j"
       - "traefik.http.middlewares.cors-neo4j.headers.customResponseHeaders.Access-Control-Allow-Origin=https://${TRFK_HOSTNAME} https://${TRFK_HOSTNAME}:7687"

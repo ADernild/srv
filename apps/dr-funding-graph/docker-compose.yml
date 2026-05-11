@@ -4,6 +4,9 @@ services:
       file: ../../common/neo4j.yml
       service: neo4j
     env_file: .env
+    expose:
+      - 7474
+      - 7687
     networks:
       - internal
 
