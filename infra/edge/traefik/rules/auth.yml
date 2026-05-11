@@ -3,6 +3,7 @@ http:
     auth-forward:
       forwardAuth:
         address: "http://authentik-server:9000/outpost.goauthentik.io/auth/traefik"
+        maxResponseBodySize: 1048576
         trustForwardHeader: true
         authResponseHeaders:
           - X-authentik-username
