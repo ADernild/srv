@@ -24,7 +24,7 @@ services:
     network_mode: none
 
   traefik:
-    image: traefik:v3.6.9
+    image: traefik:v3.7.0
     restart: unless-stopped
     extends:
       file: ../../../common/sensitive.yml
