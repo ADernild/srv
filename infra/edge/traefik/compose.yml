@@ -38,6 +38,7 @@ services:
       - "80:80"
       - "443:443/tcp"
       - "443:443/udp"
+      - "7687:7687"
     volumes:
       - trfk-socket:/socket/:ro
       - ./traefik.yml:/etc/traefik/traefik.yml:ro
