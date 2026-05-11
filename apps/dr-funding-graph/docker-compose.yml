@@ -1,5 +1,5 @@
 services:
-  neo4j:
+  dr-neo4j:
     extends:
       file: ../../common/neo4j.yml
       service: neo4j
