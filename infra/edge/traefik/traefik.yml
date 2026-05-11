@@ -126,7 +126,7 @@ api:
   debug: true
 
 log:
-  level: DEBUG
+  level: INFO
   format: json
 
 accessLog:
