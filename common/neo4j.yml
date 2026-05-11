@@ -19,3 +19,5 @@ services:
       - "traefik.tcp.routers.${TRFK_ROUTER}-bolt.entrypoints=bolt"
       - "traefik.tcp.routers.${TRFK_ROUTER}-bolt.service=${TRFK_ROUTER}-bolt"
       - "traefik.tcp.services.${TRFK_ROUTER}-bolt.loadbalancer.server.port=7687"
+      - "traefik.tcp.routers.${TRFK_ROUTER}-bolt.tls=true"
+      - "traefik.tcp.routers.${TRFK_ROUTER}-bolt.tls.certResolver=letsencrypt"
