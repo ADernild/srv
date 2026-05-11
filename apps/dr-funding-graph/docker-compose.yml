@@ -4,3 +4,9 @@ services:
       file: ../../common/neo4j.yml
       service: neo4j
     env_file: .env
+  networks:
+    - internal
+
+networks:
+  internal:
+    external: true
