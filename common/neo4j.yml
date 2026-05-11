@@ -21,4 +21,3 @@ services:
       - "traefik.tcp.routers.${TRFK_ROUTER}-bolt.service=${TRFK_ROUTER}-bolt"
       - "traefik.tcp.routers.${TRFK_ROUTER}-bolt.tls=true"
       - "traefik.tcp.routers.${TRFK_ROUTER}-bolt.tls.certResolver=letsencrypt"
-      - "traefik.tcp.services.${TRFK_ROUTER}-bolt.loadbalancer.healthcheck.enabled=false"
