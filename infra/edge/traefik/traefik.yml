@@ -56,7 +56,7 @@ entryPoints:
         - "131.0.72.0/22"
 
   bolt:
-    address: ":7687"
+    address: ":8443"
 
 certificatesResolvers:
   letsencrypt:
