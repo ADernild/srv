@@ -1,5 +1,5 @@
 services:
-  web:
+  app-rs:
     image: adernild/dernild.dev:latest
     container_name: dernild-dev-rs
     restart: unless-stopped
