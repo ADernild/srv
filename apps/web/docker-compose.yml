@@ -17,7 +17,7 @@ services:
     networks:
       - dernild-dev
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
 
   nginx:
     image: adernild/dernild.dev:nginx-latest
