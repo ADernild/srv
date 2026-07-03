@@ -1,14 +1,39 @@
 services:
   web:
-    image: adernild/dernild.dev
-    container_name: dernild-dev
+    image: adernild/dernild.dev:latest
+    container_name: dernild-dev-rs
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - dernild-dev
+    depends_on:
+      - psql
+
+  psql:
+    extends:
+      file: ../../common/dhi-psql.yml
+      service: postgres
+    env_file: .env
+    networks:
+      - dernild-dev
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  nginx:
+    image: adernild/dernild.dev:nginx-latest
+    container_name: dernild-dev-nginx
     restart: unless-stopped
     extends:
       file: ../../common/base.yml
       service: default
     networks:
       - internal
+      - dernild-dev
+
+volumes:
+  postgres-data:
 
 networks:
   internal:
     external: true
+  dernild-dev:
