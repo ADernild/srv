@@ -14,7 +14,8 @@ services:
     extends:
       file: ../../common/neo4j.yml
       service: neo4j
-    env_file: .env
+    environment:
+      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASS}
     networks:
       - mcp
     volumes:
