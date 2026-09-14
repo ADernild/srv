@@ -2,6 +2,9 @@ services:
   mcp-rs:
     image: adernild/dr-mcp:latest
     container_name: dr-mcp-rs
+    extends:
+      file: ../../common/base.yml
+      service: default
     restart: unless-stopped
     env_file: .env
     networks:
