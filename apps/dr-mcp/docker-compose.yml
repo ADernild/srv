@@ -1,0 +1,30 @@
+services:
+  mcp-rs:
+    image: adernild/dr-mcp:latest
+    container_name: dr-mcp-rs
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - mcp
+      - internal
+    depends_on:
+      - neo4j
+
+  neo4j:
+    extends:
+      file: ../../common/neo4j.yml
+      service: neo4j
+    env_file: .env
+    networks:
+      - mcp
+    volumes:
+      - neo4j-data:/data
+
+
+volumes:
+  neo4j-data:
+
+networks:
+  internal:
+    external: true
+  mcp:
