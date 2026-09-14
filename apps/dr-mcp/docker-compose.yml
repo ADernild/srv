@@ -14,9 +14,13 @@ services:
       - neo4j
 
   neo4j:
-    extends:
-      file: ../../common/neo4j.yml
-      service: neo4j
+    image: neo4j:2026.04.0-community-trixie
+    healthcheck:
+      test: wget http://localhost:7474 || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 5s
     environment:
       - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASS}
     networks:
