@@ -1,0 +1,15 @@
+services:
+  mcp-rs:
+    image: adernild/dr-dff:latest
+    container_name: dr-dff
+    extends:
+      file: ../../common/base.yml
+      service: default
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - internal
+
+networks:
+  internal:
+    external: true
