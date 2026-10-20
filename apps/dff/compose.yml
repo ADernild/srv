@@ -1,5 +1,5 @@
 services:
-  mcp-rs:
+  dr-dff-rs:
     image: adernild/dr-dff:latest
     container_name: dr-dff
     extends:
@@ -9,7 +9,10 @@ services:
     env_file: .env
     networks:
       - internal
+      - public
 
 networks:
   internal:
     external: true
+  public:
+    name: dff-public
